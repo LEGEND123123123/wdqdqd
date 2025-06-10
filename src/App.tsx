@@ -14,13 +14,14 @@ import TermsPage from './pages/TermsPage';
 import DashboardPage from './pages/DashboardPage';
 import ServiceDetailPage from './pages/ServiceDetailPage';
 import { LanguageProvider } from './context/LanguageContext';
-import { AuthProvider } from './context/AuthContext';
+import { AuthProvider, useAuth } from './context/AuthContext';
 
-function App() {
+function AppContent() {
   const [activePage, setActivePage] = useState('home');
   const [selectedServiceId, setSelectedServiceId] = useState<string | null>(null);
   const [previousPage, setPreviousPage] = useState('services');
   const [verificationPhone, setVerificationPhone] = useState('');
+  const { isLoading } = useAuth();
 
   const handleServiceClick = (serviceId: string) => {
     setPreviousPage(activePage);
@@ -89,13 +90,30 @@ function App() {
     }
   };
 
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#2E86AB] mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <Header activePage={activePage} setActivePage={setActivePage} />
+      {renderPage()}
+    </div>
+  );
+}
+
+function App() {
   return (
     <AuthProvider>
       <LanguageProvider>
-        <div className="min-h-screen bg-gray-50">
-          <Header activePage={activePage} setActivePage={setActivePage} />
-          {renderPage()}
-        </div>
+        <AppContent />
       </LanguageProvider>
     </AuthProvider>
   );

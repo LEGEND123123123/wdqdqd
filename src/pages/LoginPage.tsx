@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { User, LogIn } from 'lucide-react';
+import { LogIn, Eye, EyeOff } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { useAuth } from '../context/AuthContext';
 import Button from '../components/Button';
@@ -10,28 +10,50 @@ interface LoginPageProps {
 
 const LoginPage: React.FC<LoginPageProps> = ({ setActivePage }) => {
   const { t, isRTL } = useLanguage();
-  const { login } = useAuth();
+  const { login, isLoading } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-    setIsLoading(true);
+    setIsSubmitting(true);
+    
+    // Basic validation
+    if (!email.trim()) {
+      setError('Email is required');
+      setIsSubmitting(false);
+      return;
+    }
+    
+    if (!password) {
+      setError('Password is required');
+      setIsSubmitting(false);
+      return;
+    }
+
+    if (!/\S+@\S+\.\S+/.test(email)) {
+      setError('Please enter a valid email address');
+      setIsSubmitting(false);
+      return;
+    }
     
     try {
-      const success = await login(email, password);
-      if (success) {
+      const result = await login(email, password);
+      
+      if (result.success) {
         setActivePage('dashboard');
       } else {
-        setError('Invalid email or password');
+        setError(result.error || 'Login failed. Please try again.');
       }
     } catch (err) {
-      setError('An error occurred. Please try again.');
+      console.error('Login error:', err);
+      setError('An unexpected error occurred. Please try again.');
     } finally {
-      setIsLoading(false);
+      setIsSubmitting(false);
     }
   };
 
@@ -58,7 +80,9 @@ const LoginPage: React.FC<LoginPageProps> = ({ setActivePage }) => {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2E86AB]"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2E86AB] focus:border-transparent"
+              placeholder="Enter your email"
+              disabled={isSubmitting || isLoading}
               required
             />
           </div>
@@ -67,20 +91,33 @@ const LoginPage: React.FC<LoginPageProps> = ({ setActivePage }) => {
             <label className={`block text-gray-700 mb-2 font-medium ${isRTL ? 'text-right' : 'text-left'}`}>
               {t('login.password')}
             </label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2E86AB]"
-              required
-            />
+            <div className="relative">
+              <input
+                type={showPassword ? 'text' : 'password'}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full px-4 py-2 pr-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2E86AB] focus:border-transparent"
+                placeholder="Enter your password"
+                disabled={isSubmitting || isLoading}
+                required
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-2.5 text-gray-400 hover:text-gray-600"
+                disabled={isSubmitting || isLoading}
+              >
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
+            </div>
           </div>
           
           <Button
             type="submit"
             variant="primary"
             className="w-full"
-            isLoading={isLoading}
+            isLoading={isSubmitting || isLoading}
+            disabled={isSubmitting || isLoading}
           >
             {t('login.button')}
           </Button>
@@ -91,6 +128,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ setActivePage }) => {
           <button
             onClick={() => setActivePage('register')}
             className="text-[#2E86AB] font-medium hover:underline"
+            disabled={isSubmitting || isLoading}
           >
             {t('login.registerLink')}
           </button>
@@ -100,13 +138,19 @@ const LoginPage: React.FC<LoginPageProps> = ({ setActivePage }) => {
           <button
             onClick={() => setActivePage('terms')}
             className="text-[#2E86AB] hover:underline"
+            disabled={isSubmitting || isLoading}
           >
             {t('login.terms')}
           </button>
         </p>
+
+        {/* Demo credentials for testing */}
+        <div className="mt-6 p-4 bg-gray-50 rounded-lg">
+          <p className="text-sm text-gray-600 mb-2">Demo credentials for testing:</p>
+          <p className="text-xs text-gray-500">Email: demo@waqti.com</p>
+          <p className="text-xs text-gray-500">Password: demo123456</p>
+        </div>
       </div>
     </div>
   );
 };
-
-export default LoginPage;
