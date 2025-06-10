@@ -237,3 +237,5 @@ const RegisterPage: React.FC<RegisterPageProps> = ({ setActivePage }) => {
     </div>
   );
 };
+
+export default RegisterPage

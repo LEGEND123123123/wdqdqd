@@ -154,3 +154,5 @@ const LoginPage: React.FC<LoginPageProps> = ({ setActivePage }) => {
     </div>
   );
 };
+
+export default LoginPage
