@@ -1,5 +1,5 @@
 import React from 'react';
-import { Clock } from 'lucide-react';
+import { Clock, Star, MapPin } from 'lucide-react';
 import { Service } from '../types';
 import { useLanguage } from '../context/LanguageContext';
 
@@ -35,72 +35,81 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service, onClick }) => {
 
   return (
     <div 
-      className="bg-white rounded-xl shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-2 border border-gray-100 overflow-hidden cursor-pointer"
+      className="bg-white rounded-xl shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border border-gray-100 overflow-hidden cursor-pointer group"
       onClick={onClick}
     >
-      <div className="h-48 overflow-hidden">
+      <div className="h-40 md:h-48 overflow-hidden relative">
         <img 
           src={service.image} 
           alt={service.title} 
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+          loading="lazy"
         />
+        <div className="absolute top-3 left-3">
+          <span className="px-2 py-1 bg-white bg-opacity-90 text-[#2E86AB] text-xs font-medium rounded-full">
+            {service.category}
+          </span>
+        </div>
       </div>
-      <div className="p-6">
-        <div className={`flex items-center mb-4 ${isRTL ? 'flex-row-reverse' : 'flex-row'}`}>
-          <div className="w-12 h-12 rounded-full bg-[#2E86AB] bg-opacity-10 flex items-center justify-center text-[#2E86AB] text-xl">
+      
+      <div className="p-4 md:p-6">
+        <div className={`flex items-start mb-3 md:mb-4 ${isRTL ? 'flex-row-reverse' : 'flex-row'}`}>
+          <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-[#2E86AB] bg-opacity-10 flex items-center justify-center text-[#2E86AB] text-lg md:text-xl flex-shrink-0">
             {getCategoryIcon(service.category)}
           </div>
-          <div className={`${isRTL ? 'mr-3' : 'ml-3'}`}>
-            <span className="text-xs uppercase tracking-wider text-gray-500">{service.category}</span>
-            <h3 className="text-lg font-semibold text-[#2E86AB]">{service.title}</h3>
+          <div className={`${isRTL ? 'mr-3' : 'ml-3'} min-w-0 flex-1`}>
+            <h3 className="text-base md:text-lg font-semibold text-[#2E86AB] line-clamp-2 leading-tight">
+              {service.title}
+            </h3>
           </div>
         </div>
         
-        <p className="text-gray-600 mb-4 line-clamp-3">
+        <p className="text-gray-600 mb-3 md:mb-4 line-clamp-2 text-sm md:text-base leading-relaxed">
           {service.description}
         </p>
         
-        <div className={`flex items-center justify-between mt-5 ${isRTL ? 'flex-row-reverse' : 'flex-row'}`}>
+        <div className={`flex items-center justify-between mt-4 md:mt-5 ${isRTL ? 'flex-row-reverse' : 'flex-row'}`}>
           <div className={`flex items-center ${isRTL ? 'flex-row-reverse' : 'flex-row'}`}>
             <img 
               src={service.provider.avatar || "https://randomuser.me/api/portraits/men/32.jpg"} 
               alt={service.provider.name} 
-              className="w-8 h-8 rounded-full object-cover"
+              className="w-6 h-6 md:w-8 md:h-8 rounded-full object-cover"
+              loading="lazy"
             />
-            <span className={`text-sm text-gray-700 ${isRTL ? 'ml-2' : 'ml-2'}`}>
+            <span className={`text-xs md:text-sm text-gray-700 font-medium ${isRTL ? 'ml-2' : 'ml-2'} truncate`}>
               {service.provider.name}
             </span>
           </div>
           
-          <div className="px-3 py-1 bg-gray-100 rounded-full text-sm font-semibold text-[#2E86AB] flex items-center">
-            <Clock className="w-4 h-4 mr-1" />
+          <div className="px-2 md:px-3 py-1 bg-gray-100 rounded-full text-xs md:text-sm font-semibold text-[#2E86AB] flex items-center flex-shrink-0">
+            <Clock className="w-3 h-3 md:w-4 md:h-4 mr-1" />
             {service.hourlyRate} {service.hourlyRate === 1 ? 'Hour' : 'Hours'}
           </div>
         </div>
         
-        <div className={`flex items-center mt-4 ${isRTL ? 'flex-row-reverse' : 'flex-row'}`}>
-          <div className="flex">
-            {Array.from({ length: 5 }).map((_, index) => (
-              <svg
-                key={index}
-                className={`w-4 h-4 ${
-                  index < service.rating
-                    ? 'text-[#F18F01]'
-                    : 'text-gray-300'
-                }`}
-                fill="currentColor"
-                viewBox="0 0 20 20"
-              >
-                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-              </svg>
-            ))}
+        <div className={`flex items-center justify-between mt-3 md:mt-4 ${isRTL ? 'flex-row-reverse' : 'flex-row'}`}>
+          <div className={`flex items-center ${isRTL ? 'flex-row-reverse' : 'flex-row'}`}>
+            <div className="flex">
+              {Array.from({ length: 5 }).map((_, index) => (
+                <Star
+                  key={index}
+                  className={`w-3 h-3 md:w-4 md:h-4 ${
+                    index < service.rating
+                      ? 'text-[#F18F01] fill-current'
+                      : 'text-gray-300'
+                  }`}
+                />
+              ))}
+            </div>
+            <span className={`text-xs md:text-sm text-gray-500 ${isRTL ? 'ml-2' : 'ml-2'}`}>
+              ({service.reviews})
+            </span>
           </div>
-          <span className={`text-sm text-gray-500 ${isRTL ? 'ml-auto' : 'ml-2'}`}>
-            ({service.reviews})
-          </span>
-          <span className={`text-sm text-gray-500 ${isRTL ? 'ml-2 mr-auto' : 'ml-auto'}`}>
-            {service.location}
-          </span>
+          
+          <div className={`flex items-center text-xs md:text-sm text-gray-500 ${isRTL ? 'flex-row-reverse' : 'flex-row'}`}>
+            <MapPin className="w-3 h-3 md:w-4 md:h-4 mr-1" />
+            <span className="truncate">{service.location}</span>
+          </div>
         </div>
       </div>
     </div>

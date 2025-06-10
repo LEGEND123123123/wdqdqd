@@ -11,6 +11,7 @@ import ExpertiseVerificationPage from './pages/ExpertiseVerificationPage';
 import AboutPage from './pages/AboutPage';
 import SupportPage from './pages/SupportPage';
 import TermsPage from './pages/TermsPage';
+import PrivacyPage from './pages/PrivacyPage';
 import DashboardPage from './pages/DashboardPage';
 import ServiceDetailPage from './pages/ServiceDetailPage';
 import { LanguageProvider } from './context/LanguageContext';
@@ -73,6 +74,8 @@ function AppContent() {
         return <SupportPage />;
       case 'terms':
         return <TermsPage />;
+      case 'privacy':
+        return <PrivacyPage />;
       case 'dashboard':
         return <DashboardPage setActivePage={setActivePage} />;
       case 'serviceDetail':

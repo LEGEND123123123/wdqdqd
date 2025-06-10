@@ -10,7 +10,7 @@ export default {
         'secondary-dark': '#d97d00',
       },
       fontFamily: {
-        sans: ['Tajawal', 'sans-serif'],
+        sans: ['Tajawal', 'system-ui', 'sans-serif'],
       },
       animation: {
         fadeIn: 'fadeIn 0.5s ease-in-out',
@@ -26,7 +26,34 @@ export default {
           '50%': { transform: 'translateY(-10px)' },
         }
       },
+      screens: {
+        'xs': '475px',
+      },
     },
   },
-  plugins: [],
+  plugins: [
+    function({ addUtilities }) {
+      const newUtilities = {
+        '.line-clamp-1': {
+          overflow: 'hidden',
+          display: '-webkit-box',
+          '-webkit-box-orient': 'vertical',
+          '-webkit-line-clamp': '1',
+        },
+        '.line-clamp-2': {
+          overflow: 'hidden',
+          display: '-webkit-box',
+          '-webkit-box-orient': 'vertical',
+          '-webkit-line-clamp': '2',
+        },
+        '.line-clamp-3': {
+          overflow: 'hidden',
+          display: '-webkit-box',
+          '-webkit-box-orient': 'vertical',
+          '-webkit-line-clamp': '3',
+        },
+      }
+      addUtilities(newUtilities)
+    }
+  ],
 };
