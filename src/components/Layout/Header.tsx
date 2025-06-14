@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Clock } from 'lucide-react';
+import { Clock, Bell, MessageSquare, User } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useLanguage } from '../../context/LanguageContext';
 
@@ -9,7 +9,7 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = ({ activePage, setActivePage }) => {
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn, user } = useAuth();
   const { language, setLanguage, t, isRTL } = useLanguage();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -70,16 +70,67 @@ const Header: React.FC<HeaderProps> = ({ activePage, setActivePage }) => {
               {t('nav.services')}
             </button>
           </li>
-          <li className={`mx-2`}>
-            <button
-              onClick={() => handleNavClick('wallet')}
-              className={`px-3 py-2 rounded-lg hover:bg-white hover:bg-opacity-20 transition-all ${
-                activePage === 'wallet' ? 'bg-white bg-opacity-20' : ''
-              }`}
-            >
-              {t('nav.wallet')}
-            </button>
-          </li>
+          
+          {isLoggedIn && (
+            <>
+              <li className={`mx-2`}>
+                <button
+                  onClick={() => handleNavClick('wallet')}
+                  className={`px-3 py-2 rounded-lg hover:bg-white hover:bg-opacity-20 transition-all ${
+                    activePage === 'wallet' ? 'bg-white bg-opacity-20' : ''
+                  }`}
+                >
+                  {t('nav.wallet')}
+                </button>
+              </li>
+              <li className={`mx-2`}>
+                <button
+                  onClick={() => handleNavClick('messages')}
+                  className={`px-3 py-2 rounded-lg hover:bg-white hover:bg-opacity-20 transition-all relative ${
+                    activePage === 'messages' ? 'bg-white bg-opacity-20' : ''
+                  }`}
+                >
+                  <MessageSquare size={18} />
+                  <span className="absolute -top-1 -right-1 bg-[#F18F01] text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                    2
+                  </span>
+                </button>
+              </li>
+              <li className={`mx-2`}>
+                <button
+                  onClick={() => handleNavClick('notifications')}
+                  className={`px-3 py-2 rounded-lg hover:bg-white hover:bg-opacity-20 transition-all relative ${
+                    activePage === 'notifications' ? 'bg-white bg-opacity-20' : ''
+                  }`}
+                >
+                  <Bell size={18} />
+                  <span className="absolute -top-1 -right-1 bg-[#F18F01] text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                    3
+                  </span>
+                </button>
+              </li>
+              <li className={`mx-2`}>
+                <button
+                  onClick={() => handleNavClick('userProfile')}
+                  className={`flex items-center px-3 py-2 rounded-lg hover:bg-white hover:bg-opacity-20 transition-all ${
+                    activePage === 'userProfile' ? 'bg-white bg-opacity-20' : ''
+                  }`}
+                >
+                  {user?.avatar ? (
+                    <img
+                      src={user.avatar}
+                      alt={user.name}
+                      className="w-6 h-6 rounded-full object-cover mr-2"
+                    />
+                  ) : (
+                    <User size={18} className="mr-2" />
+                  )}
+                  <span className="hidden lg:inline">{user?.name}</span>
+                </button>
+              </li>
+            </>
+          )}
+          
           <li className={`mx-2`}>
             <button
               onClick={() => handleNavClick('about')}
@@ -100,30 +151,44 @@ const Header: React.FC<HeaderProps> = ({ activePage, setActivePage }) => {
               {t('nav.support')}
             </button>
           </li>
-          <li className={`mx-2`}>
-            <button
-              onClick={() => handleNavClick('register')}
-              className={`px-3 py-2 rounded-lg hover:bg-white hover:bg-opacity-20 transition-all ${
-                activePage === 'register' ? 'bg-white bg-opacity-20' : ''
-              }`}
-            >
-              {t('nav.register')}
-            </button>
-          </li>
-          <li className={`mx-2`}>
-            <button
-              onClick={() => handleNavClick(isLoggedIn ? 'dashboard' : 'login')}
-              className={`px-3 py-2 rounded-lg hover:bg-white hover:bg-opacity-20 transition-all ${
-                activePage === 'login' || activePage === 'dashboard' ? 'bg-white bg-opacity-20' : ''
-              }`}
-            >
-              {isLoggedIn ? (
-                <span>{t('nav.dashboard')}</span>
-              ) : (
-                <span>{t('nav.login')}</span>
-              )}
-            </button>
-          </li>
+          
+          {!isLoggedIn && (
+            <>
+              <li className={`mx-2`}>
+                <button
+                  onClick={() => handleNavClick('register')}
+                  className={`px-3 py-2 rounded-lg hover:bg-white hover:bg-opacity-20 transition-all ${
+                    activePage === 'register' ? 'bg-white bg-opacity-20' : ''
+                  }`}
+                >
+                  {t('nav.register')}
+                </button>
+              </li>
+              <li className={`mx-2`}>
+                <button
+                  onClick={() => handleNavClick('login')}
+                  className={`px-3 py-2 rounded-lg hover:bg-white hover:bg-opacity-20 transition-all ${
+                    activePage === 'login' ? 'bg-white bg-opacity-20' : ''
+                  }`}
+                >
+                  {t('nav.login')}
+                </button>
+              </li>
+            </>
+          )}
+          
+          {isLoggedIn && (
+            <li className={`mx-2`}>
+              <button
+                onClick={() => handleNavClick('dashboard')}
+                className={`px-3 py-2 rounded-lg hover:bg-white hover:bg-opacity-20 transition-all ${
+                  activePage === 'dashboard' ? 'bg-white bg-opacity-20' : ''
+                }`}
+              >
+                {t('nav.dashboard')}
+              </button>
+            </li>
+          )}
         </ul>
       </nav>
 
@@ -159,16 +224,62 @@ const Header: React.FC<HeaderProps> = ({ activePage, setActivePage }) => {
                 {t('nav.services')}
               </button>
             </li>
-            <li className="py-2">
-              <button
-                onClick={() => handleNavClick('wallet')}
-                className={`w-full text-left px-3 py-2 rounded-lg hover:bg-white hover:bg-opacity-20 transition-all ${
-                  activePage === 'wallet' ? 'bg-white bg-opacity-20' : ''
-                }`}
-              >
-                {t('nav.wallet')}
-              </button>
-            </li>
+            
+            {isLoggedIn && (
+              <>
+                <li className="py-2">
+                  <button
+                    onClick={() => handleNavClick('wallet')}
+                    className={`w-full text-left px-3 py-2 rounded-lg hover:bg-white hover:bg-opacity-20 transition-all ${
+                      activePage === 'wallet' ? 'bg-white bg-opacity-20' : ''
+                    }`}
+                  >
+                    {t('nav.wallet')}
+                  </button>
+                </li>
+                <li className="py-2">
+                  <button
+                    onClick={() => handleNavClick('messages')}
+                    className={`w-full text-left px-3 py-2 rounded-lg hover:bg-white hover:bg-opacity-20 transition-all ${
+                      activePage === 'messages' ? 'bg-white bg-opacity-20' : ''
+                    }`}
+                  >
+                    Messages
+                  </button>
+                </li>
+                <li className="py-2">
+                  <button
+                    onClick={() => handleNavClick('notifications')}
+                    className={`w-full text-left px-3 py-2 rounded-lg hover:bg-white hover:bg-opacity-20 transition-all ${
+                      activePage === 'notifications' ? 'bg-white bg-opacity-20' : ''
+                    }`}
+                  >
+                    Notifications
+                  </button>
+                </li>
+                <li className="py-2">
+                  <button
+                    onClick={() => handleNavClick('userProfile')}
+                    className={`w-full text-left px-3 py-2 rounded-lg hover:bg-white hover:bg-opacity-20 transition-all ${
+                      activePage === 'userProfile' ? 'bg-white bg-opacity-20' : ''
+                    }`}
+                  >
+                    Profile
+                  </button>
+                </li>
+                <li className="py-2">
+                  <button
+                    onClick={() => handleNavClick('dashboard')}
+                    className={`w-full text-left px-3 py-2 rounded-lg hover:bg-white hover:bg-opacity-20 transition-all ${
+                      activePage === 'dashboard' ? 'bg-white bg-opacity-20' : ''
+                    }`}
+                  >
+                    {t('nav.dashboard')}
+                  </button>
+                </li>
+              </>
+            )}
+            
             <li className="py-2">
               <button
                 onClick={() => handleNavClick('about')}
@@ -189,30 +300,31 @@ const Header: React.FC<HeaderProps> = ({ activePage, setActivePage }) => {
                 {t('nav.support')}
               </button>
             </li>
-            <li className="py-2">
-              <button
-                onClick={() => handleNavClick('register')}
-                className={`w-full text-left px-3 py-2 rounded-lg hover:bg-white hover:bg-opacity-20 transition-all ${
-                  activePage === 'register' ? 'bg-white bg-opacity-20' : ''
-                }`}
-              >
-                {t('nav.register')}
-              </button>
-            </li>
-            <li className="py-2">
-              <button
-                onClick={() => handleNavClick(isLoggedIn ? 'dashboard' : 'login')}
-                className={`w-full text-left px-3 py-2 rounded-lg hover:bg-white hover:bg-opacity-20 transition-all ${
-                  activePage === 'login' || activePage === 'dashboard' ? 'bg-white bg-opacity-20' : ''
-                }`}
-              >
-                {isLoggedIn ? (
-                  <span>{t('nav.dashboard')}</span>
-                ) : (
-                  <span>{t('nav.login')}</span>
-                )}
-              </button>
-            </li>
+            
+            {!isLoggedIn && (
+              <>
+                <li className="py-2">
+                  <button
+                    onClick={() => handleNavClick('register')}
+                    className={`w-full text-left px-3 py-2 rounded-lg hover:bg-white hover:bg-opacity-20 transition-all ${
+                      activePage === 'register' ? 'bg-white bg-opacity-20' : ''
+                    }`}
+                  >
+                    {t('nav.register')}
+                  </button>
+                </li>
+                <li className="py-2">
+                  <button
+                    onClick={() => handleNavClick('login')}
+                    className={`w-full text-left px-3 py-2 rounded-lg hover:bg-white hover:bg-opacity-20 transition-all ${
+                      activePage === 'login' ? 'bg-white bg-opacity-20' : ''
+                    }`}
+                  >
+                    {t('nav.login')}
+                  </button>
+                </li>
+              </>
+            )}
           </ul>
         </div>
       )}

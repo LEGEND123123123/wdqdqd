@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Clock, User, Bell, MessageSquare, Calendar, FileText, Settings, LogOut } from 'lucide-react';
+import { Clock, User, Bell, MessageSquare, Calendar, FileText, Settings, LogOut, Plus } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
 import Button from '../components/Button';
@@ -61,7 +61,7 @@ const DashboardPage: React.FC<DashboardPageProps> = ({ setActivePage }) => {
                 className={`w-full flex items-center px-4 py-3 rounded-lg transition-colors ${
                   activeTab === 'bookings' ? 'bg-white bg-opacity-10' : 'hover:bg-white hover:bg-opacity-5'
                 }`}
-                onClick={() => setActiveTab('bookings')}
+                onClick={() => setActivePage('bookings')}
               >
                 <Calendar className="mr-3" size={18} />
                 Bookings
@@ -72,7 +72,7 @@ const DashboardPage: React.FC<DashboardPageProps> = ({ setActivePage }) => {
                 className={`w-full flex items-center px-4 py-3 rounded-lg transition-colors ${
                   activeTab === 'messages' ? 'bg-white bg-opacity-10' : 'hover:bg-white hover:bg-opacity-5'
                 }`}
-                onClick={() => setActiveTab('messages')}
+                onClick={() => setActivePage('messages')}
               >
                 <MessageSquare className="mr-3" size={18} />
                 Messages
@@ -83,7 +83,7 @@ const DashboardPage: React.FC<DashboardPageProps> = ({ setActivePage }) => {
                 className={`w-full flex items-center px-4 py-3 rounded-lg transition-colors ${
                   activeTab === 'notifications' ? 'bg-white bg-opacity-10' : 'hover:bg-white hover:bg-opacity-5'
                 }`}
-                onClick={() => setActiveTab('notifications')}
+                onClick={() => setActivePage('notifications')}
               >
                 <Bell className="mr-3" size={18} />
                 Notifications
@@ -139,7 +139,7 @@ const DashboardPage: React.FC<DashboardPageProps> = ({ setActivePage }) => {
               className={`flex-1 px-4 py-2 text-center rounded-lg ${
                 activeTab === 'bookings' ? 'bg-[#2E86AB] text-white' : 'text-gray-600'
               }`}
-              onClick={() => setActiveTab('bookings')}
+              onClick={() => setActivePage('bookings')}
             >
               <Calendar className="mx-auto mb-1" size={18} />
               <span className="text-xs">Bookings</span>
@@ -149,7 +149,7 @@ const DashboardPage: React.FC<DashboardPageProps> = ({ setActivePage }) => {
               className={`flex-1 px-4 py-2 text-center rounded-lg ${
                 activeTab === 'messages' ? 'bg-[#2E86AB] text-white' : 'text-gray-600'
               }`}
-              onClick={() => setActiveTab('messages')}
+              onClick={() => setActivePage('messages')}
             >
               <MessageSquare className="mx-auto mb-1" size={18} />
               <span className="text-xs">Messages</span>
@@ -189,7 +189,7 @@ const DashboardPage: React.FC<DashboardPageProps> = ({ setActivePage }) => {
                   <div className="text-3xl font-bold text-[#2E86AB]">3</div>
                   <button 
                     className="mt-4 text-[#2E86AB] text-sm font-medium hover:underline"
-                    onClick={() => setActiveTab('bookings')}
+                    onClick={() => setActivePage('bookings')}
                   >
                     View Bookings
                   </button>
@@ -200,7 +200,7 @@ const DashboardPage: React.FC<DashboardPageProps> = ({ setActivePage }) => {
                   <div className="text-3xl font-bold text-[#2E86AB]">5</div>
                   <button 
                     className="mt-4 text-[#2E86AB] text-sm font-medium hover:underline"
-                    onClick={() => setActiveTab('messages')}
+                    onClick={() => setActivePage('messages')}
                   >
                     View Messages
                   </button>
@@ -235,7 +235,7 @@ const DashboardPage: React.FC<DashboardPageProps> = ({ setActivePage }) => {
                   
                   <button 
                     className="mt-4 text-[#2E86AB] text-sm font-medium hover:underline"
-                    onClick={() => setActiveTab('bookings')}
+                    onClick={() => setActivePage('bookings')}
                   >
                     View All Bookings
                   </button>
@@ -278,7 +278,8 @@ const DashboardPage: React.FC<DashboardPageProps> = ({ setActivePage }) => {
                 </p>
                 <Button
                   variant="primary"
-                  onClick={() => setActiveTab('myServices')}
+                  leftIcon={<Plus size={18} />}
+                  onClick={() => setActivePage('create-service')}
                 >
                   Create Service
                 </Button>
@@ -290,102 +291,79 @@ const DashboardPage: React.FC<DashboardPageProps> = ({ setActivePage }) => {
             <div className="animate-fadeIn">
               <div className="flex justify-between items-center mb-6">
                 <h1 className="text-2xl font-bold">My Services</h1>
-                <Button variant="primary">Add New Service</Button>
+                <Button 
+                  variant="primary" 
+                  leftIcon={<Plus size={18} />}
+                  onClick={() => setActivePage('create-service')}
+                >
+                  Add New Service
+                </Button>
               </div>
               
               <div className="bg-white rounded-xl p-6 shadow-sm">
                 <p className="text-center py-8 text-gray-500">
                   You haven't created any services yet.
                 </p>
-              </div>
-            </div>
-          )}
-          
-          {activeTab === 'bookings' && (
-            <div className="animate-fadeIn">
-              <h1 className="text-2xl font-bold mb-6">My Bookings</h1>
-              
-              <div className="bg-white rounded-xl overflow-hidden shadow-sm">
-                <div className="flex border-b">
-                  <button className="flex-1 py-3 px-4 font-medium border-b-2 border-[#2E86AB] text-[#2E86AB]">
-                    Upcoming
-                  </button>
-                  <button className="flex-1 py-3 px-4 font-medium text-gray-600">
-                    Past
-                  </button>
-                </div>
-                
-                <div className="p-6">
-                  <div className="bg-white border border-gray-200 rounded-lg p-4 mb-4">
-                    <div className="flex justify-between items-center mb-3">
-                      <h3 className="font-medium">Web Development Consultation</h3>
-                      <span className="px-3 py-1 bg-yellow-100 text-yellow-800 text-xs rounded-full">
-                        Pending
-                      </span>
-                    </div>
-                    <div className="text-sm text-gray-600 mb-3">
-                      <p>Tomorrow, 2:00 PM - 3:00 PM</p>
-                      <p>With: Ahmed Hassan</p>
-                    </div>
-                    <div className="flex gap-2">
-                      <button className="px-3 py-1 bg-[#2E86AB] text-white text-sm rounded-lg">
-                        Reschedule
-                      </button>
-                      <button className="px-3 py-1 bg-red-600 text-white text-sm rounded-lg">
-                        Cancel
-                      </button>
-                    </div>
-                  </div>
-                  
-                  <div className="bg-white border border-gray-200 rounded-lg p-4">
-                    <div className="flex justify-between items-center mb-3">
-                      <h3 className="font-medium">Arabic Language Lesson</h3>
-                      <span className="px-3 py-1 bg-green-100 text-green-800 text-xs rounded-full">
-                        Confirmed
-                      </span>
-                    </div>
-                    <div className="text-sm text-gray-600 mb-3">
-                      <p>Monday, 10:00 AM - 11:00 AM</p>
-                      <p>With: Sarah Mohammed</p>
-                    </div>
-                    <div className="flex gap-2">
-                      <button className="px-3 py-1 bg-[#2E86AB] text-white text-sm rounded-lg">
-                        Join Meeting
-                      </button>
-                      <button className="px-3 py-1 bg-gray-100 text-gray-600 text-sm rounded-lg">
-                        Message
-                      </button>
-                    </div>
-                  </div>
+                <div className="text-center">
+                  <Button
+                    variant="primary"
+                    leftIcon={<Plus size={18} />}
+                    onClick={() => setActivePage('create-service')}
+                  >
+                    Create Your First Service
+                  </Button>
                 </div>
               </div>
             </div>
           )}
           
           {/* Placeholder content for other tabs */}
-          {(activeTab === 'messages' || activeTab === 'notifications' || activeTab === 'settings') && (
+          {(activeTab === 'settings') && (
             <div className="animate-fadeIn">
-              <h1 className="text-2xl font-bold mb-6">
-                {activeTab === 'messages' ? 'Messages' : 
-                 activeTab === 'notifications' ? 'Notifications' : 'Settings'}
-              </h1>
+              <h1 className="text-2xl font-bold mb-6">Settings</h1>
               
-              <div className="bg-white rounded-xl p-8 shadow-sm text-center">
-                <p className="text-gray-500 mb-4">
-                  {activeTab === 'messages' ? 'No messages yet.' : 
-                   activeTab === 'notifications' ? 'No notifications yet.' : 
-                   'Settings will be available soon.'}
-                </p>
-                
-                {activeTab === 'settings' && (
-                  <Button
-                    variant="secondary"
-                    className="mt-4"
-                    onClick={handleLogout}
-                  >
-                    Logout
-                  </Button>
-                )}
+              <div className="bg-white rounded-xl p-8 shadow-sm">
+                <div className="space-y-6">
+                  <div>
+                    <h3 className="text-lg font-medium mb-4">Account Settings</h3>
+                    <div className="space-y-4">
+                      <Button
+                        variant="secondary"
+                        onClick={() => setActivePage('userProfile')}
+                      >
+                        Edit Profile
+                      </Button>
+                      <Button
+                        variant="secondary"
+                        onClick={() => setActivePage('notifications')}
+                      >
+                        Notification Preferences
+                      </Button>
+                    </div>
+                  </div>
+                  
+                  <div className="pt-6 border-t border-gray-200">
+                    <h3 className="text-lg font-medium mb-4">Security</h3>
+                    <div className="space-y-4">
+                      <Button variant="secondary">
+                        Change Password
+                      </Button>
+                      <Button variant="secondary">
+                        Two-Factor Authentication
+                      </Button>
+                    </div>
+                  </div>
+                  
+                  <div className="pt-6 border-t border-gray-200">
+                    <Button
+                      variant="outline"
+                      className="text-red-600 border-red-600 hover:bg-red-50"
+                      onClick={handleLogout}
+                    >
+                      Logout
+                    </Button>
+                  </div>
+                </div>
               </div>
             </div>
           )}
@@ -398,7 +376,7 @@ const DashboardPage: React.FC<DashboardPageProps> = ({ setActivePage }) => {
               <div className="bg-white rounded-xl overflow-hidden shadow-sm">
                 <button
                   className="w-full text-left px-6 py-4 border-b border-gray-100 hover:bg-gray-50"
-                  onClick={() => setActiveTab('notifications')}
+                  onClick={() => setActivePage('notifications')}
                 >
                   <div className="flex items-center">
                     <Bell className="mr-3" size={18} />

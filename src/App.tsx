@@ -14,12 +14,18 @@ import TermsPage from './pages/TermsPage';
 import PrivacyPage from './pages/PrivacyPage';
 import DashboardPage from './pages/DashboardPage';
 import ServiceDetailPage from './pages/ServiceDetailPage';
+import CreateServicePage from './pages/CreateServicePage';
+import MessagesPage from './pages/MessagesPage';
+import NotificationsPage from './pages/NotificationsPage';
+import UserProfilePage from './pages/UserProfilePage';
+import BookingManagementPage from './pages/BookingManagementPage';
 import { LanguageProvider } from './context/LanguageContext';
 import { AuthProvider, useAuth } from './context/AuthContext';
 
 function AppContent() {
   const [activePage, setActivePage] = useState('home');
   const [selectedServiceId, setSelectedServiceId] = useState<string | null>(null);
+  const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
   const [previousPage, setPreviousPage] = useState('services');
   const [verificationPhone, setVerificationPhone] = useState('');
   const { isLoading } = useAuth();
@@ -28,6 +34,12 @@ function AppContent() {
     setPreviousPage(activePage);
     setSelectedServiceId(serviceId);
     setActivePage('serviceDetail');
+  };
+
+  const handleUserClick = (userId: string) => {
+    setPreviousPage(activePage);
+    setSelectedUserId(userId);
+    setActivePage('userProfile');
   };
 
   const handlePhoneVerification = (phone: string) => {
@@ -42,6 +54,7 @@ function AppContent() {
   const goBack = () => {
     setActivePage(previousPage);
     setSelectedServiceId(null);
+    setSelectedUserId(null);
   };
 
   const renderPage = () => {
@@ -78,6 +91,16 @@ function AppContent() {
         return <PrivacyPage />;
       case 'dashboard':
         return <DashboardPage setActivePage={setActivePage} />;
+      case 'create-service':
+        return <CreateServicePage setActivePage={setActivePage} />;
+      case 'messages':
+        return <MessagesPage setActivePage={setActivePage} />;
+      case 'notifications':
+        return <NotificationsPage setActivePage={setActivePage} />;
+      case 'bookings':
+        return <BookingManagementPage setActivePage={setActivePage} />;
+      case 'userProfile':
+        return <UserProfilePage setActivePage={setActivePage} userId={selectedUserId || undefined} />;
       case 'serviceDetail':
         return selectedServiceId ? (
           <ServiceDetailPage 
